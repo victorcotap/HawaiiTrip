@@ -33,8 +33,7 @@ class VacationLocationService: VacationLocationStateManagerType {
     func refreshVacationState() async -> Result<VacationState, Error> {
         await withCheckedContinuation({ continuation in
             /// Do the network call here using Future (See SuperAppService for reference)
-            /// or Repository
-            ///
+            /// self.networking.makeApiRequest(...)
 
             // In case of success
             let apiResponse = OfflineData.testVacationStateResponse
@@ -48,7 +47,9 @@ class VacationLocationService: VacationLocationStateManagerType {
 
     func refreshLocations() async -> Result<[Location], Error> {
         await withCheckedContinuation({ continuation in
-            /// Do the network call here using Future (See SuperAppService for reference
+            /// Do the network call here using Future (See SuperAppService for reference)
+            /// self.networking.makeApiRequest(...)
+
             let apiResponse = OfflineData.testLocationsResponse
 
             // In case of success
@@ -56,7 +57,7 @@ class VacationLocationService: VacationLocationStateManagerType {
             self.locations = apiResponse.locations
 
             // In case of some error
-//            continuation.resume(returning: .failure(EmptyError()))
+            // continuation.resume(returning: .failure(EmptyError()))
         })
     }
 }
