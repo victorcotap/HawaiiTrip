@@ -18,9 +18,9 @@ protocol VacationLocationStateManagerType {
     func refreshLocations() async -> Result<[Location], Error>
 }
 
-class VacationLocationStateManager: VacationLocationStateManagerType {
+class VacationLocationService: VacationLocationStateManagerType {
 
-    // private var vacationRepository: SomeKindOfRepository
+    // @Resolved var network: NetworkingService
 
     @Published private var state: VacationState = .unknowned
     @Published private var locations: [Location] = []
@@ -34,6 +34,7 @@ class VacationLocationStateManager: VacationLocationStateManagerType {
         await withCheckedContinuation({ continuation in
             /// Do the network call here using Future (See SuperAppService for reference)
             /// or Repository
+            ///
 
             // In case of success
             let apiResponse = OfflineData.testVacationStateResponse

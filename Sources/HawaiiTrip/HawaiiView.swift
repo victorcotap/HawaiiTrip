@@ -13,12 +13,14 @@ struct HawaiiView: View {
 
     var body: some View {
         VStack {
-            Text(viewModel.presentation?.title ?? "title").font(.title)
-            Text(viewModel.presentation?.subtitle ?? "subtitle").font(.subheadline)
-            List(viewModel.locations) { location in
-                HStack {
-                    Text(location.name).font(.body)
-                    Text(location.description).font(.callout)
+            if case let .ready(presentation) = viewModel.state {
+                Text(presentation.title).font(.title)
+                Text(presentation.subtitle).font(.subheadline)
+                List(viewModel.locations) { location in
+                    HStack {
+                        Text(location.name).font(.body)
+                        Text(location.description).font(.callout)
+                    }
                 }
             }
             Button("Refresh Me!") {
@@ -32,7 +34,7 @@ struct HawaiiView: View {
 
 struct HawaiiView_Previews: PreviewProvider {
     static var previews: some View {
-        let somePreviewMockStateManager: VacationLocationStateManagerType = VacationLocationStateManager()
+        let somePreviewMockStateManager: VacationLocationStateManagerType = VacationLocationService()
         let viewModel = HawaiiViewModel(stateManager: somePreviewMockStateManager)
         HawaiiView(viewModel: viewModel)
     }

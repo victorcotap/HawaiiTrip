@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 
-struct HawaiiViewVacationStatePresentation {
+struct HawaiiViewModelPresentation {
     let title: String
     let subtitle: String
     let state: String
@@ -19,7 +19,10 @@ struct HawaiiViewVacationStatePresentation {
 
 enum HawaiiViewModelState {
     case loading
-    case ready
+    case error
+
+    // Bundle presentation into viewModel state
+    case ready(presentation: HawaiiViewModelPresentation)
 }
 
 class HawaiiViewModel: ObservableObject {
@@ -27,16 +30,21 @@ class HawaiiViewModel: ObservableObject {
 
     @Published var state: HawaiiViewModelState = .loading
     @Published var locations: [Location] = []
-    @Published var presentation: HawaiiViewVacationStatePresentation?
+
+    // Sometimes we can directly use a presentation instead of bundling it into a state
+    // @Published var presentation: HawaiiViewModelPresentation?
 
     init(stateManager: VacationLocationStateManagerType) {
         self.stateManager = stateManager
         // Example of combining multiple StateManager publishers to determine View Model properties
         stateManager.statePublisher.combineLatest(stateManager.copyPublisher).sink { outputs in
-            guard let copy = outputs.1 else { return }
+            let copy = outputs.1
             let vacationState = outputs.0
 
-            self.state = .ready
+            guard let copy = copy, vacationState != .unknowned else {
+                self.state = .loading
+                return
+            }
 
             // Example of how to set presentation based on state
             let stateValue: String
@@ -48,13 +56,15 @@ class HawaiiViewModel: ObservableObject {
             }
 
             // Presentation is now bound and always updated
-            self.presentation = HawaiiViewVacationStatePresentation(
+            let presentation = HawaiiViewModelPresentation(
                 title: copy.title,
                 subtitle: copy.subtitle,
                 state: stateValue,
                 uiColor: .systemIndigo,
                 color: .white
             )
+
+            self.state = .ready(presentation: presentation)
         }
 
         // Example of directly reassigning to a ViewModel published property

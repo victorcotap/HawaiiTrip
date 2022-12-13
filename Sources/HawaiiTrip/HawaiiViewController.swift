@@ -24,8 +24,8 @@ class HawaiiViewControllerViewController: UIViewController {
     }
 
     func bindCardState() {
-        viewModel.$presentation.sink { presentation in
-            // config with presentations
+        viewModel.$state.sink { state in
+            // config with state / presentation
         }
         viewModel.$locations.sink { locations in
             // populate some kind of list
